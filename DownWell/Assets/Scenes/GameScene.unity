@@ -372,7 +372,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefabLeftWall: {fileID: 3295334451948397769, guid: f038d36fef8b66f4abdfaa3ea4bac1d0, type: 3}
   _prefabRightWall: {fileID: 4316532225608984573, guid: f5533bca30b65b44096f5beda6ce714a, type: 3}
-  _wallSpacingFromCenterInPixels: 500
+  _blockPrefab: {fileID: 3295334451948397769, guid: f038d36fef8b66f4abdfaa3ea4bac1d0, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
