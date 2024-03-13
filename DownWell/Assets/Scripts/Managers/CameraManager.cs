@@ -27,13 +27,9 @@ public class CameraManager : MonoBehaviour
     private void Update()
     {
         if (_target != null)
-        {
             _mainCam.transform.position = new Vector3(0.0f, _mainCam.transform.position.y * (1 - _smoothSpeedDown) + _target.position.y * _smoothSpeedDown, -_depthCam);
-        }
         else
-        {
             Debug.LogWarning("Target not set for CameraManager. Make sure the player is tagged as 'Player' in the scene.");
-        }
     }
 }
 

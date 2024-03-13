@@ -1,14 +1,19 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEditor.Overlays;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    [Header("Prefabs")]
+    [SerializeField] private GameObject _prefabSpawnStart;
     [SerializeField] private GameObject _prefabLeftWall;
     [SerializeField] private GameObject _prefabRightWall;
-    [SerializeField] private GameObject _blockPrefab;
+    [SerializeField] private GameObject _blockPrefab; 
 
-    [SerializeField, Range(400f, 600f)] private float _wallSpacingFromCenterInPixels = 500f;
+    [Header("Positions")]
+    [SerializeField] private float _wallSpacingFromCenterInPixels = 0;
+    [SerializeField, Range(1, 15)] private int _offsetSpawnPlatform = 2;
 
     private Transform _mainCam;
 
@@ -17,6 +22,12 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         _mainCam = Camera.main.transform;
+        _wallSpacingFromCenterInPixels = Camera.main.orthographicSize / 2 + 1;
+
+        Debug.Log("_wallSpacingFromCenterInPixels : " + _wallSpacingFromCenterInPixels);
+
+        GameObject platform = Instantiate(_prefabSpawnStart,  new Vector3(_mainCam.position.x / 2, _mainCam.position.y / 2 - _offsetSpawnPlatform, 0f), Quaternion.identity);
+        platform.transform.parent = transform;
 
         StartCoroutine(GenerateWallsCoroutine());
     }
@@ -31,7 +42,7 @@ public class LevelManager : MonoBehaviour
         if (_finisheEarlyAnimation)
         {
             float cameraBottomY = _mainCam.position.y - Camera.main.orthographicSize;
-            float currentY = _mainCam.position.y;
+            float currentY = Mathf.RoundToInt(_mainCam.position.y);
 
             while (currentY > cameraBottomY - 10)
             {
@@ -39,10 +50,13 @@ public class LevelManager : MonoBehaviour
 
                 // Vérifie s'il y a déjà un bloc à l'emplacement
                 Collider2D existingBlock = Physics2D.OverlapCircle(blockPosition, 0.1f);
+                
+                Debug.Log("existingBlock : " + existingBlock);
+
                 if (existingBlock == null)
                 {
-                    GameObject leftWall     = Instantiate(_prefabLeftWall,  new Vector3(_mainCam.position.x / 2 - _wallSpacingFromCenterInPixels / 100, currentY, 0f), Quaternion.identity);
-                    GameObject rightWall    = Instantiate(_prefabRightWall, new Vector3(_mainCam.position.x / 2 + _wallSpacingFromCenterInPixels / 100, currentY, 0f), Quaternion.identity);
+                    GameObject leftWall     = Instantiate(_prefabLeftWall,  new Vector3(_mainCam.position.x / 2 - _wallSpacingFromCenterInPixels /* /100 */, currentY, 0f), Quaternion.identity);
+                    GameObject rightWall    = Instantiate(_prefabRightWall, new Vector3(_mainCam.position.x / 2 + _wallSpacingFromCenterInPixels /* /100 */, currentY, 0f), Quaternion.identity);
 
                     leftWall.transform.parent = transform;
                     rightWall.transform.parent = transform;
@@ -55,7 +69,7 @@ public class LevelManager : MonoBehaviour
     private IEnumerator GenerateWallsCoroutine()
     {
         float cameraBottomY = _mainCam.position.y - Camera.main.orthographicSize;
-        float currentY = _mainCam.position.y;
+        float currentY = Mathf.RoundToInt(_mainCam.position.y);
 
         while (currentY > cameraBottomY - 10)
         {
@@ -65,8 +79,8 @@ public class LevelManager : MonoBehaviour
             Collider2D existingBlock = Physics2D.OverlapCircle(blockPosition, 0.1f);
             if (existingBlock == null)
             {
-                GameObject leftWall     = Instantiate(_prefabLeftWall,  new Vector3(_mainCam.position.x / 2 - _wallSpacingFromCenterInPixels / 100, currentY, 0f), Quaternion.identity);
-                GameObject rightWall    = Instantiate(_prefabRightWall, new Vector3(_mainCam.position.x / 2 + _wallSpacingFromCenterInPixels / 100, currentY, 0f), Quaternion.identity);
+                GameObject leftWall     = Instantiate(_prefabLeftWall,  new Vector3(_mainCam.position.x / 2 - _wallSpacingFromCenterInPixels /* /100*/, currentY, 0f), Quaternion.identity);
+                GameObject rightWall    = Instantiate(_prefabRightWall, new Vector3(_mainCam.position.x / 2 + _wallSpacingFromCenterInPixels /* /100*/, currentY, 0f), Quaternion.identity);
 
                 leftWall.transform.parent  = transform;
                 rightWall.transform.parent = transform;
@@ -77,7 +91,7 @@ public class LevelManager : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        float cameraTopY = _mainCam.position.y + Camera.main.orthographicSize;
+        /*float cameraTopY = _mainCam.position.y + Camera.main.orthographicSize;
         while (currentY > cameraTopY + 10)
         {
             Vector3 blockPosition = new Vector3(_mainCam.position.x / 2, currentY, 0f);
@@ -96,7 +110,7 @@ public class LevelManager : MonoBehaviour
             currentY += 1f;  // - 1 cube size
 
             yield return new WaitForSeconds(0.05f);
-        }
+        }*/
         _finisheEarlyAnimation = true;
     }
 
