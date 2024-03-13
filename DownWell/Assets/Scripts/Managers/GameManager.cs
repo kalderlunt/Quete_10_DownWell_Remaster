@@ -8,15 +8,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _player;
     [SerializeField] private Transform _spawnPlayerStart;
 
-    private void Start()
+    private void Awake()
     {
-        GameObject player = Instantiate(_player, _spawnPlayerStart.position, Quaternion.identity);
+        //GameObject player =
+        Instantiate(_player, _spawnPlayerStart.position, Quaternion.identity);
 
-        // Assurez-vous que la caméra existe et est attachée au joueur
+/*        // Assurez-vous que la caméra existe et est attachée au joueur
         if (Camera.main != null)
         {
             // Rend la caméra un enfant du joueur
             Camera.main.transform.SetParent(player.transform, false);
-        }
+        }*/
     }
 }
