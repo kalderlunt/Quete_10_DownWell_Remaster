@@ -1,6 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor.Overlays;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
@@ -24,7 +22,7 @@ public class LevelManager : MonoBehaviour
         _mainCam = Camera.main.transform;
         _wallSpacingFromCenterInPixels = Camera.main.orthographicSize / 2 + 1;
 
-        Debug.Log("_wallSpacingFromCenterInPixels : " + _wallSpacingFromCenterInPixels);
+        //Debug.Log("_wallSpacingFromCenterInPixels : " + _wallSpacingFromCenterInPixels);
 
         GameObject platform = Instantiate(_prefabSpawnStart,  new Vector3(_mainCam.position.x / 2, _mainCam.position.y / 2 - _offsetSpawnPlatform, 0f), Quaternion.identity);
         platform.transform.parent = transform;
@@ -51,7 +49,7 @@ public class LevelManager : MonoBehaviour
                 // Vérifie s'il y a déjà un bloc à l'emplacement
                 Collider2D existingBlock = Physics2D.OverlapCircle(blockPosition, 0.1f);
                 
-                Debug.Log("existingBlock : " + existingBlock);
+                //Debug.Log("existingBlock : " + existingBlock);
 
                 if (existingBlock == null)
                 {
@@ -88,7 +86,7 @@ public class LevelManager : MonoBehaviour
 
             currentY -= 1f;  // - 1 cube size
 
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.02f);
         }
 
         /*float cameraTopY = _mainCam.position.y + Camera.main.orthographicSize;

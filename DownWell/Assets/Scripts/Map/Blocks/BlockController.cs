@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockController : MonoBehaviour
@@ -18,7 +16,7 @@ public class BlockController : MonoBehaviour
         // Vérifie si le bloc est hors de l'écran + 10 unités en Y
         if (transform.position.y > cameraTopY + 10)
         {
-            Debug.Log("destroyyyyyyyyyyyyy");
+            //Debug.Log("destroyyyyyyyyyyyyy");
             Destroy(gameObject);
         }
     }

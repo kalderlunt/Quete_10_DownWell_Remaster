@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,5 +20,16 @@ public class GameManager : MonoBehaviour
             // Rend la caméra un enfant du joueur
             Camera.main.transform.SetParent(player.transform, false);
         }*/
+
+        PrintDevices();
+    }
+
+    void PrintDevices()
+    {
+        foreach (var device in InputSystem.devices)
+        {
+            if (device.enabled)
+                Debug.Log("Active Device : " + device.name);
+        }
     }
 }
