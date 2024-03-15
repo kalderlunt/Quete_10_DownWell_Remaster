@@ -12,16 +12,8 @@ public class GameManager : MonoBehaviour
         //GameObject player =
         Instantiate(_player, _spawnPlayerStart.position, Quaternion.identity);
 
-        //Instantiate();
 
-/*        // Assurez-vous que la caméra existe et est attachée au joueur
-        if (Camera.main != null)
-        {
-            // Rend la caméra un enfant du joueur
-            Camera.main.transform.SetParent(player.transform, false);
-        }*/
-
-        PrintDevices();
+        //PrintDevices();
     }
 
     void PrintDevices()

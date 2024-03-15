@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3630bc4022e81c4ab983848fbab5284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _smoothSpeedDown: 0.8
+  _smoothSpeedDown: 0.1
 --- !u!1 &1222778675
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,8 +419,10 @@ MonoBehaviour:
   _prefabSpawnStart: {fileID: 4316532225608984573, guid: 45d8bef8940c63540a8eae3bdd026bac, type: 3}
   _prefabLeftWall: {fileID: 3295334451948397769, guid: f038d36fef8b66f4abdfaa3ea4bac1d0, type: 3}
   _prefabRightWall: {fileID: 4316532225608984573, guid: f5533bca30b65b44096f5beda6ce714a, type: 3}
-  _blockPrefab: {fileID: 3295334451948397769, guid: f038d36fef8b66f4abdfaa3ea4bac1d0, type: 3}
-  _wallSpacingFromCenterInPixels: 0
+  _blockPrefab: {fileID: 4316532225608984573, guid: 45d8bef8940c63540a8eae3bdd026bac, type: 3}
+  _enemyList:
+  - {fileID: 7668392384076593058, guid: 9f8fb94228df7e84eb3e972477bfe0f9, type: 3}
+  _levelSize: 1000
   _offsetSpawnPlatform: 7
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
