@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Important Parameters")]
+    public float hp = 100;
+    public float hpMax = 100;
+    public float damageAmount = 100;
+
     [Header("Movement Parameters")]
     [SerializeField] private float _moveSpeed = 5f;         // WalkSpeed
     [SerializeField] private float _forceDash = 2.0f;
@@ -15,31 +18,33 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject _bullet;
     [SerializeField] private float _shootForce = 5.0f;
 
-    /*    [Header("Look Sensivity")]
-        private float _mouseSensitivity = 2.0f;
-        private float _upDownRange = 80.0f;*/
-    //[SerializeField] private InputAction _playerControls;
-    //private PlayerInputHandler _inputHandler;
-
-
     private Rigidbody2D _rb;
-    private Vector2 _moveDirection = Vector2.zero;
-    private Vector2 value;
+    
+    private Collider2D _bodyCollider;
+    [SerializeField] private Collider2D _feetCollider;
 
+    private Vector2 _moveDirection = Vector2.zero;
     private Vector2 _lastPos;
 
+    private bool _isMove = false;
+    [HideInInspector] public bool canJump = false;
     //private bool _dashing = false;
 
 
     private void Start()
     {
         _lastPos = transform.position;
+        
         _rb = GetComponent<Rigidbody2D>();
+        _bodyCollider = GetComponent<Collider2D>();
+
+        hp = hpMax;
     }
 
     private void Update()
     {
         CheckHorizontalDirection();
+        UpdateMove();
     }
 
     
@@ -55,18 +60,39 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void UpdateMove()
+    {
+        if (_isMove)
+        {
+            _rb.velocity = new Vector2(_moveDirection.x * _moveSpeed, _rb.velocity.y);
+        }
+    }
+
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        // Vector 2 / analogique
-        _moveDirection = ctx.ReadValue<Vector2>();
-        _rb.AddForce(_moveDirection * _moveSpeed, ForceMode2D.Impulse);
-        //Debug.Log("Move Perform");
+        // Vector 2 / analogic
+        if (ctx.started)
+        {
+            _isMove = true;
+            _moveDirection = ctx.ReadValue<Vector2>();
+        }
+
+        if (ctx.canceled)
+        {
+             _isMove = false;
+            _moveDirection = Vector2.zero;
+        }
         
 /*        if (ctx.performed)
         {
         }*/
-}
+    }
+
+    public void JumpAction()
+    {
+        _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+    }
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
@@ -74,8 +100,11 @@ public class PlayerController : MonoBehaviour
 
         if (ctx.performed)
         {
-            _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-            Debug.Log("Jump Perform");
+            if (canJump)
+            {
+                canJump = false;
+                JumpAction();
+            }
         }
     }
 
@@ -84,6 +113,11 @@ public class PlayerController : MonoBehaviour
         // Button
         if (ctx.performed)
         {
+            if (_rb.velocity.y < -_jumpForce)
+            {
+                _rb.velocity = new Vector2 (_rb.velocity.x, -_jumpForce);
+            }
+
             Vector3 spawnPostion = new Vector3(transform.position.x, transform.position.y - 2, transform.position.z);
             Rigidbody2D bulletRb = Instantiate(_bullet, spawnPostion, Quaternion.identity).GetComponent<Rigidbody2D>(); // vitesse vers le bas
             bulletRb.AddForce(Vector2.down * -_shootForce, ForceMode2D.Impulse);
@@ -99,7 +133,13 @@ public class PlayerController : MonoBehaviour
         if (ctx.performed)
         {
             _rb.AddForce(_moveDirection * _moveSpeed * _forceDash);
-            Debug.Log("Dash Perform");
         }
     }
+
+
+    /* /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\ */
+    /* \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/ */
+    /* /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\ */
+
+    // Functions
 }

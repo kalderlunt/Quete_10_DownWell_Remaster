@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    [Header("Parameters")]
+    [SerializeField] private float _percToSpawnBreakableBlock = 40.0f;
+
+
     [Header("Prefabs")]
     [SerializeField] private GameObject _prefabSpawnStart;
     [SerializeField] private GameObject _prefabLeftWall;
     [SerializeField] private GameObject _prefabRightWall;
     [SerializeField] private GameObject _blockPrefab;
+    [SerializeField] private GameObject _blockBreakablePrefab;
 
     [SerializeField] private List<GameObject> _enemyList;
 
@@ -57,77 +62,105 @@ public class LevelManager : MonoBehaviour
         if (Mathf.Abs(currentCamPosY - _lastCamPos.y) >= 5)
         {
             GenerateWallsCoroutine();
-            //StartCoroutine(GenerateWallsCoroutine());
+            StartCoroutine(GeneratePlateforms());
             
-            StartCoroutine(GeneratePlatforms());
             _lastCamPos = _mainCam.position;
         }
     }
 
     private void GenerateWallsCoroutine()
+{
+    float cameraBottomY = _mainCam.position.y - Camera.main.orthographicSize;
+    float currentY = Mathf.RoundToInt(_mainCam.position.y);
+
+    while (currentY > cameraBottomY - 10)
+    {
+        Vector3 blockPosition = new Vector3(_mainCam.position.x / 2, currentY, 0f);
+        Collider2D existingBlock = Physics2D.OverlapCircle(blockPosition, 0.1f);
+
+        //Debug.DrawLine(blockPosition + Vector3.left * 1f, blockPosition + Vector3.right * 0.1f, Color.red);
+        //Debug.DrawLine(blockPosition + Vector3.up   * 1f, blockPosition + Vector3.down  * 0.1f, Color.red);
+
+        if (existingBlock == null)         // Vérifie s'il y a déjà un bloc à l'emplacement
+        {
+            GameObject leftWall = Instantiate(_prefabLeftWall, new Vector3(_mainCam.position.x / 2 - _wallSpacingFromCenterInPixels, currentY, 0f), Quaternion.identity);
+            GameObject rightWall = Instantiate(_prefabRightWall, new Vector3(_mainCam.position.x / 2 + _wallSpacingFromCenterInPixels, currentY, 0f), Quaternion.identity);
+
+            leftWall.transform.parent = transform;
+            rightWall.transform.parent = transform;
+        }
+
+        currentY -= 1f;  // - 1 cube size
+    }
+}
+
+
+    private IEnumerator GeneratePlateforms()
     {
         float cameraBottomY = _mainCam.position.y - Camera.main.orthographicSize;
-        float currentY = Mathf.RoundToInt(_mainCam.position.y);
-
-        while (currentY > cameraBottomY - 10)
+        
+        for (int y = 0; y < _levelSize; y++) // position y
         {
-            Vector3 blockPosition = new Vector3(_mainCam.position.x / 2, currentY, 0f);
-
-            // Vérifie s'il y a déjà un bloc à l'emplacement
-            Collider2D existingBlock = Physics2D.OverlapCircle(blockPosition, 0.1f);
-            if (existingBlock == null)
+            for (int x = 0; x < (int)Camera.main.orthographicSize + 2; x++) // position x
             {
-                GameObject leftWall     = Instantiate(_prefabLeftWall,  new Vector3(_mainCam.position.x / 2 - _wallSpacingFromCenterInPixels /* /100*/, currentY, 0f), Quaternion.identity);
-                GameObject rightWall    = Instantiate(_prefabRightWall, new Vector3(_mainCam.position.x / 2 + _wallSpacingFromCenterInPixels /* /100*/, currentY, 0f), Quaternion.identity);
+                Vector3Int spawnPos = new Vector3Int((int)(-_wallSpacingFromCenterInPixels + x), (int)cameraBottomY, 0);
+                Vector3 blockPosition = new Vector3(spawnPos.x, spawnPos.y, 0f);
+                Collider2D existingBlock = Physics2D.OverlapCircle(blockPosition, 0.1f);
 
-                leftWall.transform.parent  = transform;
-                rightWall.transform.parent = transform;
+                if (existingBlock == null)
+                { 
+                    float spawnProbSub = 0;
+                    float screenPercent = 0.3f;
+                    float lessBlockMidPercent = 0.15f;
+
+                    if (Mathf.Abs(spawnPos.x) < Camera.main.orthographicSize * screenPercent) 
+                        spawnProbSub += lessBlockMidPercent;
+
+                    if (Mathf.PerlinNoise(spawnPos.x / 10f + _seed, spawnPos.y / 10f + _seed) > 0.50f + spawnProbSub) // 0.70f = % de remplissage (noir)
+                    {
+                        GenerateWall(spawnPos);
+                    }
+                    else
+                    {
+                        GenerateEnemy(spawnPos);
+                    }
+                    //spawnPos.x += 1;
+                }
             }
-
-            currentY -= 1f;  // - 1 cube size
-
-            //yield return null;
+            /*spawnPos.x = (int)(-Camera.main.orthographicSize / 2) + 1;
+            spawnPos.y -= 1;*/
+            cameraBottomY -= 1;
         }
+        yield return new WaitForSeconds(0.0001f);
     }
 
-    private IEnumerator GeneratePlatforms()
+    private void GenerateWall(Vector3Int spawnPos)
     {
-        float cameraBottomY = _mainCam.position.y - Camera.main.orthographicSize;
-        Vector3Int spawnPos = new Vector3Int((int)(-_wallSpacingFromCenterInPixels + 1), (int)cameraBottomY, 0);
-        
-        for (int i = 0; i < _levelSize; i++) // position y
+        float randomValueToAssignTag = Random.Range(0f, 100f);
+
+        if (randomValueToAssignTag < _percToSpawnBreakableBlock)                                                // 50% Chance to spawn with "Breackable" Tag
         {
-            for (int y = 0; y < (int)Camera.main.orthographicSize - 1; y++) // position x
-            {
-                float spawnProbSub = 0;
-                float screenPercent = 0.0f;
-                float lessBlockMidPercent = 0.15f;
-
-                if (Mathf.Abs(spawnPos.x) < Camera.main.orthographicSize * screenPercent) 
-                    spawnProbSub += lessBlockMidPercent;
-
-                if (Mathf.PerlinNoise(spawnPos.x / 10f + _seed, spawnPos.y / 10f + _seed) > 0.70f + spawnProbSub) // 0.70f = % de remplissage (noir)
-                {
-                    Instantiate(_blockPrefab, spawnPos, Quaternion.identity);
-                }
-                else
-                {
-                    GenerateEnemy(spawnPos);
-                }
-                spawnPos.x += 1;
-            }
-            spawnPos.x = (int)(-Camera.main.orthographicSize / 2) + 1;
-            spawnPos.y -= 1;
+            GameObject block = Instantiate(_blockBreakablePrefab, spawnPos, Quaternion.identity);
+            block.tag = Tag.Breakable.ToString();
+            block.transform.parent = transform;
+            //Debug.Log("Spawn Tag Block");
         }
-        yield return new WaitForSeconds(0.001f);
+        else
+        {
+            GameObject block = Instantiate(_blockPrefab, spawnPos, Quaternion.identity);
+            block.tag = Tag.Floor.ToString();
+            block.transform.parent = transform;
+        }
     }
 
     private void GenerateEnemy(Vector3Int spawnPos)
     {
         float randomValue = Random.Range(0f, 100f);
-        if (randomValue < 0.5f)
+        if (randomValue < 0.3f)
         {
-            Instantiate(_enemyList[Random.Range(0, _enemyList.Count)], spawnPos, Quaternion.identity);
+            GameObject enemy = Instantiate(_enemyList[Random.Range(0, _enemyList.Count)], spawnPos, Quaternion.identity);
+            enemy.tag = Tag.Enemy.ToString();
+            enemy.transform.parent = transform;
         }
     }
 }
