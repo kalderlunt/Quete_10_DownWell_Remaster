@@ -148,13 +148,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163979953}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1222778676}
-  m_Father: {fileID: 172573215}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &163979955
 MonoBehaviour:
@@ -170,6 +170,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 8297483462196724311, guid: 5f4249cf24064fe42948df78bdabe415, type: 3}
   _spawnPlayerStart: {fileID: 1222778676}
+  _timerBeforeTogglePhysics: 15
+  gravityPower: 1
+  eventSystem: {fileID: 0}
 --- !u!1 &172573214
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +202,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 163979954}
   - {fileID: 1928577688}
   - {fileID: 1148166364}
   m_Father: {fileID: 0}
@@ -340,7 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3630bc4022e81c4ab983848fbab5284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _smoothSpeedDown: 0.8
+  _smoothSpeedDown: 0.1
 --- !u!1 &1222778675
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,15 +418,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96af11a1ca4db13419fd2276359b764d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _percToSpawnBreakableBlock: 40
   _prefabSpawnStart: {fileID: 4316532225608984573, guid: 45d8bef8940c63540a8eae3bdd026bac, type: 3}
   _prefabLeftWall: {fileID: 3295334451948397769, guid: f038d36fef8b66f4abdfaa3ea4bac1d0, type: 3}
   _prefabRightWall: {fileID: 4316532225608984573, guid: f5533bca30b65b44096f5beda6ce714a, type: 3}
-  _blockPrefab: {fileID: 3295334451948397769, guid: f038d36fef8b66f4abdfaa3ea4bac1d0, type: 3}
-  _wallSpacingFromCenterInPixels: 0
+  _blockPrefab: {fileID: 4316532225608984573, guid: 45d8bef8940c63540a8eae3bdd026bac, type: 3}
+  _blockBreakablePrefab: {fileID: 4316532225608984573, guid: 81ac49dbabd74364bb67734ef8c2a58f, type: 3}
+  _enemyList:
+  - {fileID: 7668392384076593058, guid: 9f8fb94228df7e84eb3e972477bfe0f9, type: 3}
+  _levelSize: 1000
   _offsetSpawnPlatform: 7
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
+  - {fileID: 163979954}
   - {fileID: 172573215}

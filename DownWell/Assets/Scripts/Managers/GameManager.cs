@@ -1,25 +1,91 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     [Header("Start Initiate player")]
     [SerializeField] private GameObject _player;
     [SerializeField] private Transform _spawnPlayerStart;
 
+    [Header("Gravity")]
+    [SerializeField] private float _timerBeforeTogglePhysics = 15.0f;
+    public DirGravity gravityPower = DirGravity.DownWards; // 1 vers le bas || -1 vers le haut
+    private float _timer = 0f;
+
+    [Header("Events")]
+    public EventSystem eventSystem;
+
     private void Awake()
     {
-        //GameObject player =
         Instantiate(_player, _spawnPlayerStart.position, Quaternion.identity);
 
-        //Instantiate();
-
-/*        // Assurez-vous que la caméra existe et est attachée au joueur
-        if (Camera.main != null)
+        if (instance == null)
         {
-            // Rend la caméra un enfant du joueur
-            Camera.main.transform.SetParent(player.transform, false);
-        }*/
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject); 
+        }
+
+        if (eventSystem == null)
+        {
+            eventSystem = FindObjectOfType<EventSystem>();
+        }
+
+        //PrintDevices();
+    }
+
+    private void Start()
+    {
+        _timer = _timerBeforeTogglePhysics;
+    }
+
+    private void Update()
+    {
+        UpdateGravityDirection();
+    }
+
+    private void UpdateGravityDirection()
+    {
+        Debug.Log("gravityPower" + gravityPower);
+        if (CheckGravityDirection() == DirGravity.Upwards)
+        {
+            if (_timer <= 0)
+            {
+                eventSystem.PlayEvent(GameEventType.Gravity);
+            }
+            else
+                _timer -= Time.deltaTime;
+        }
+        else
+            if (_timer != _timerBeforeTogglePhysics)
+                _timer = _timerBeforeTogglePhysics;
+    }
+
+    private DirGravity CheckGravityDirection()
+    {
+        if (Physics2D.gravity.y > 0)
+        {
+            gravityPower = DirGravity.Upwards;
+            return gravityPower;
+        }
+        else
+        {
+            gravityPower = DirGravity.DownWards;
+            return gravityPower;
+        }
+    }
+
+    void PrintDevices()
+    {
+        foreach (var device in InputSystem.devices)
+        {
+            if (device.enabled)
+                Debug.Log("Active Device : " + device.name);
+        }
     }
 }

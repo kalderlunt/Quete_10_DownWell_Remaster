@@ -4,9 +4,9 @@ public class CameraManager : MonoBehaviour
 {
     private Transform _target; // Target => player
     private Transform _mainCam;
-    private float _depthCam = 10.0f;    // Vitesse descente
+    private float _depthCam = 5.0f;    // Vitesse descente
 
-    [SerializeField, Range(0.0f, 1.0f)] private float _smoothSpeedDown  = 0.8f;    // Vitesse descente
+    [SerializeField, Range(0.0f, 1.0f)] private float _smoothSpeedDown  = 0.1f;    // Vitesse descente
     //[SerializeField] private float smoothSpeedUp    = 6.0f;       // Vitesse montée
 
 
