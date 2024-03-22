@@ -1,5 +1,3 @@
-using Unity.VisualScripting;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +14,9 @@ public class GameManager : MonoBehaviour
     public DirGravity gravityPower = DirGravity.DownWards; // 1 vers le bas || -1 vers le haut
     private float _timer = 0f;
 
+    [Header("Events")]
+    public EventSystem eventSystem;
+
     private void Awake()
     {
         Instantiate(_player, _spawnPlayerStart.position, Quaternion.identity);
@@ -30,6 +31,11 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject); 
         }
 
+        if (eventSystem == null)
+        {
+            eventSystem = FindObjectOfType<EventSystem>();
+        }
+
         //PrintDevices();
     }
 
@@ -40,10 +46,18 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (CheckGravityDirection() > DirGravity.Upwards) 
+        UpdateGravityDirection();
+    }
+
+    private void UpdateGravityDirection()
+    {
+        Debug.Log("gravityPower" + gravityPower);
+        if (CheckGravityDirection() == DirGravity.Upwards)
         {
             if (_timer <= 0)
-                Physics2D.gravity *= -1;
+            {
+                eventSystem.PlayEvent(GameEventType.Gravity);
+            }
             else
                 _timer -= Time.deltaTime;
         }

@@ -196,7 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 100
   hpMax: 100
-  _percentToGiveSkills: 3
+  _percentToGiveSkills: 30
   _skillsPrefab:
   - {fileID: 4316532225608984573, guid: e3616f1005220284fadfbc13382aac59, type: 3}
 --- !u!1 &8656931618589195296

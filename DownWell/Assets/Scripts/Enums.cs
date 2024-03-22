@@ -13,7 +13,7 @@ public enum WeaponType
     ShotGun,
 }
 
-public enum EventType
+public enum GameEventType
 {
     None,
     Gravity,

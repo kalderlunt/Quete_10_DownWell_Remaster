@@ -24,17 +24,9 @@ public class PlayerFeet : MonoBehaviour
 
         if (other.transform.parent.parent.CompareTag(Tag.Events.ToString()))
         {
-            EventGravity eventGravity = other.transform.parent.parent.GetComponent<EventGravity>();
-            
-            switch (eventGravity.eventId)
-            {
-                case EventType.Gravity:
-                    eventGravity.ToggleGravity();
-                    break;
-                
-                default:
-                    break;
-            }
+            GravityEvent gravityEvent = other.transform.parent.parent.GetComponent<GravityEvent>();
+            gravityEvent.Execute();
+            Destroy(other.transform.parent.parent.gameObject);
         }
     }
 
@@ -43,3 +35,16 @@ public class PlayerFeet : MonoBehaviour
         _playerController.canJump = false;
     }
 }
+
+
+/*            GravityEvent gravityEvent = other.transform.parent.parent.GetComponent<GravityEvent>();
+            
+            switch (gravityEvent.eventId)
+            {
+                case EventType.Gravity:
+                    eventGravity.ToggleGravity();
+                    break;
+                
+                default:
+                    break;
+            }*/
