@@ -27,21 +27,18 @@ public class BulletScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        //if (_collider != null)
-        //{
-            if (other.collider.transform.parent.parent.CompareTag(Tag.Breakable.ToString()))
-            {
-                Destroy(gameObject);
-                Destroy(other.transform.parent.parent.gameObject);
-            }
+        if (other.collider.transform.parent.parent.CompareTag(Tag.Breakable.ToString()))
+        {
+            BlockController blockBreakable = other.transform.parent.parent.GetComponent<BlockController>();
+            blockBreakable.hp -= _playerController.damageAmount;
+        }
 
-            if (other.collider.transform.parent.parent.CompareTag(Tag.Enemy.ToString()))
-            {
-                EnemyScript enemyScript = other.transform.parent.parent.GetComponent<EnemyScript>();
-                enemyScript.hp -= _playerController.damageAmount;
+        if (other.collider.transform.parent.parent.CompareTag(Tag.Enemy.ToString()))
+        {
+            EnemyScript enemyScript = other.transform.parent.parent.GetComponent<EnemyScript>();
+            enemyScript.hp -= _playerController.damageAmount;
                 
-                Destroy(gameObject);
-            }
-        //}
+            Destroy(gameObject);
+        }
     }
 }

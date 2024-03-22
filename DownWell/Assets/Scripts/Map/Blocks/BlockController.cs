@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static Unity.Collections.AllocatorManager;
 
 public class BlockController : MonoBehaviour
 {
@@ -33,16 +35,20 @@ public class BlockController : MonoBehaviour
             Vector3 positionblock = transform.position;
             Destroy(gameObject);
 
-            if (gameObject == null)
-            {
-                float percentSpawnBonus = Random.Range(0f, 100f);
-                int indexSkill = Random.Range(0, _skillsPrefab.Count);
+            SpawnBonus(positionblock);
+        }
+    }
 
-                if (percentSpawnBonus /100 <= _percentToGiveSkills / 100)
-                {
-                    Instantiate(_skillsPrefab[indexSkill], positionblock, Quaternion.identity);
-                }
-            }
+    private void SpawnBonus(Vector3 positionblock)
+    {
+        float percentSpawnBonus = Random.Range(0f, 100f);
+        int indexSkill = Random.Range(0, _skillsPrefab.Count);
+
+        if (percentSpawnBonus / 100 <= _percentToGiveSkills / 100)
+        {
+            GameObject eventblock = Instantiate(_skillsPrefab[indexSkill], positionblock, _skillsPrefab[indexSkill].transform.rotation);
+            eventblock.tag = Tag.Events.ToString();
+            //eventblock.transform.parent = transform;
         }
     }
 }

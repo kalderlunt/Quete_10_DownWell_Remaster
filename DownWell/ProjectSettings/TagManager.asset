@@ -7,6 +7,7 @@ TagManager:
   - Breakable
   - Enemy
   - Floor
+  - Events
   layers:
   - Default
   - TransparentFX

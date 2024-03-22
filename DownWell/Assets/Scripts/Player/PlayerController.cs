@@ -6,13 +6,13 @@ public class PlayerController : MonoBehaviour
     [Header("Important Parameters")]
     public float hp = 100;
     public float hpMax = 100;
-    public float damageAmount = 100;
+    [SerializeField] private WeaponType _hasWeapon = WeaponType.Pistol;
+    public float damageAmount;
 
     [Header("Movement Parameters")]
-    [SerializeField] private float _moveSpeed = 5f;         // WalkSpeed
+    public float moveSpeed = 5f;         // WalkSpeed
     [SerializeField] private float _forceDash = 2.0f;
     [SerializeField] private float _jumpForce = 50.0f;
-
 
     [Header("Shoot Parameters")]
     [SerializeField] private GameObject _bullet;
@@ -20,11 +20,11 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D _rb;
     
-    private Collider2D _bodyCollider;
-    [SerializeField] private Collider2D _feetCollider;
+    //private Collider2D _bodyCollider;
+    //[SerializeField] private Collider2D _feetCollider;
 
-    private Vector2 _moveDirection = Vector2.zero;
-    private Vector2 _lastPos;
+    private Vector2 _moveDirection  = Vector2.zero;
+    private Vector2 _lastPos        = Vector2.zero;
 
     private bool _isMove = false;
     [HideInInspector] public bool canJump = false;
@@ -36,18 +36,41 @@ public class PlayerController : MonoBehaviour
         _lastPos = transform.position;
         
         _rb = GetComponent<Rigidbody2D>();
-        _bodyCollider = GetComponent<Collider2D>();
+        //_bodyCollider = GetComponent<Collider2D>();
 
         hp = hpMax;
     }
 
     private void Update()
     {
+
+        CheckWeapon();
         CheckHorizontalDirection();
         UpdateMove();
     }
 
-    
+    private void CheckWeapon()
+    {
+        switch (_hasWeapon)
+        {
+            case WeaponType.Pistol:
+                damageAmount = 40.0f;
+                break;
+            
+            case WeaponType.Riffle:
+                damageAmount = 20.0f;
+                break;
+            
+            case WeaponType.ShotGun:
+                damageAmount = 30.0f;
+                break;
+            
+            default:
+                Debug.LogError("CheckWaypoint not success");
+                break;
+        }
+    }
+
     private void CheckHorizontalDirection()
     {
         float currentCamPosY = transform.position.y;
@@ -64,7 +87,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_isMove)
         {
-            _rb.velocity = new Vector2(_moveDirection.x * _moveSpeed, _rb.velocity.y);
+            _rb.velocity = new Vector2(_moveDirection.x * moveSpeed, _rb.velocity.y);
         }
     }
 
@@ -132,7 +155,7 @@ public class PlayerController : MonoBehaviour
 
         if (ctx.performed)
         {
-            _rb.AddForce(_moveDirection * _moveSpeed * _forceDash);
+            _rb.AddForce(_moveDirection * moveSpeed * _forceDash);
         }
     }
 

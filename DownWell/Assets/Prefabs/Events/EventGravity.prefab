@@ -106,7 +106,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.5479469, g: 0.8301887, b: 0.18405126, a: 1}
+  m_Color: {r: 0.6603774, g: 0.12148453, b: 0.55475175, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -157,10 +157,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5457859333954012266}
-  - component: {fileID: 3153995218860278172}
+  - component: {fileID: 2041048717859265430}
   m_Layer: 0
-  m_Name: Block Breakable
-  m_TagString: Breakable
+  m_Name: EventGravity
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -173,7 +173,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4316532225608984573}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -181,8 +181,8 @@ Transform:
   - {fileID: 7038885273594707671}
   - {fileID: 3765346062838652511}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3153995218860278172
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
+--- !u!114 &2041048717859265430
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,14 +191,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4316532225608984573}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02bf8c6efd6c7c34cb5adc19d3c2284c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ae19196fc87bf84aa32bf158691e6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
-  hpMax: 100
-  _percentToGiveSkills: 3
-  _skillsPrefab:
-  - {fileID: 4316532225608984573, guid: e3616f1005220284fadfbc13382aac59, type: 3}
+  eventId: 1
 --- !u!1 &8656931618589195296
 GameObject:
   m_ObjectHideFlags: 0
